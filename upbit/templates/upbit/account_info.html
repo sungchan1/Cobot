@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Account Information</title>
+    <style>
+        table {
+            margin-top: 20px;
+            border-collapse: collapse;
+            width: 100%;
+        }
+        th, td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: left;
+        }
+        th {
+            background-color: #f4f4f4;
+        }
+        #portfolioChart {
+            margin-top: 20px;
+        }
+    </style>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+    <h1 style="text-align: center;">Account Information</h1>
+
+    <!-- humanize 모듈 로드 -->
+    {% load humanize %}
+
+    <!-- 총 자산 표시 -->
+    <h2 style="text-align: center; color: #333;">
+        Total Assets: ₩{{ total_assets_value|floatformat:0|intcomma }}
+    </h2>
+
+
+    <!-- 원형 그래프 -->
+    <h2 style="text-align: center;">Portfolio Distribution</h2>
+    <canvas id="portfolioChart" width="400" height="400" style="display: block; margin: 0 auto;"></canvas>
+    <!-- 테이블 -->
+    <table>
+        <thead>
+            <tr>
+                <th>Currency</th>
+                <th>Balance</th>
+                <th>Avg Buy Price</th>
+                <th>Total KRW Value</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for account in account_info %}
+                <tr>
+                    <td>{{ account.currency }}</td>
+                    <td>{{ account.balance }}</td>
+                    <td>{{ account.avg_buy_price }}</td>
+                    <td>₩{{ account.total_price|floatformat:0|intcomma }}</td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+    <script>
+        // Django에서 전달된 데이터
+        const chartData = JSON.parse('{{ chart_data|escapejs }}');
+
+        // 50개의 고유 색상 생성
+        const colors = [
+            '#FF6384', '#36A2EB', '#FFCE56', '#4BC0C0', '#9966FF', '#FF9F40', '#FFCD56', '#C9CBCF',
+            '#4D5360', '#A8B3C5', '#949FB1', '#FDB45C', '#46BFBD', '#F7464A', '#5AD3D1', '#FFC870',
+            '#7C4DFF', '#4CAF50', '#FF5722', '#FF9800', '#8BC34A', '#03A9F4', '#E91E63', '#9C27B0',
+            '#3F51B5', '#FFEB3B', '#CDDC39', '#673AB7', '#00BCD4', '#607D8B', '#009688', '#9E9E9E',
+            '#795548', '#F44336', '#2196F3', '#2196F3', '#0D47A1', '#B71C1C', '#1A237E', '#004D40',
+            '#3E2723', '#263238', '#880E4F', '#F57F17', '#1B5E20', '#33691E', '#BF360C', '#DD2C00',
+            '#FF6F00', '#827717'
+        ];
+
+        // Chart.js 설정
+        const ctx = document.getElementById('portfolioChart').getContext('2d');
+        new Chart(ctx, {
+            type: 'pie', // 원형 그래프
+            data: {
+                labels: chartData.labels, // 코인 이름
+                datasets: [{
+                    label: 'KRW Value',
+                    data: chartData.values, // 코인의 총 KRW 가치
+                    backgroundColor: colors.slice(0, chartData.labels.length), // 동적 색상 적용
+                    borderColor: colors.slice(0, chartData.labels.length).map(color => color.replace(/0\.5/, '1')), // 동일 색상에 불투명도 제거
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                responsive: true,
+                plugins: {
+                    legend: {
+                        position: 'bottom', // 범례 위치
+                    }
+                }
+            }
+        });
+    </script>
+</body>
+</html>
