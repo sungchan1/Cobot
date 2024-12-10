@@ -1,6 +1,11 @@
 from django.urls import path
-from .views import account_info_view, account_chart_view
+from .views import *
+
+
+app_name = 'upbit'
 
 urlpatterns = [
-    path('account/', account_info_view, name='account_info'),
+    path('account/', account_info_view, name='account'),
+    path('', service_list, name='service_list'),
+
 ]

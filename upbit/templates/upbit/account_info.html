@@ -44,18 +44,20 @@
         <thead>
             <tr>
                 <th>Currency</th>
+                <th>Total KRW Value</th>
                 <th>Balance</th>
                 <th>Avg Buy Price</th>
-                <th>Total KRW Value</th>
+
             </tr>
         </thead>
         <tbody>
             {% for account in account_info %}
                 <tr>
                     <td>{{ account.currency }}</td>
+                    <td>₩{{ account.total_price|floatformat:0|intcomma }}</td>
                     <td>{{ account.balance }}</td>
                     <td>{{ account.avg_buy_price }}</td>
-                    <td>₩{{ account.total_price|floatformat:0|intcomma }}</td>
+
                 </tr>
             {% endfor %}
         </tbody>

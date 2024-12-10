@@ -1,9 +1,30 @@
 from django.shortcuts import render
+from django.urls import get_resolver
+
 from .models import AccountInfo
 from django.core.serializers.json import DjangoJSONEncoder
 import json
 
 from .services import get_account_info
+
+
+def service_list(request):
+    # 모든 URL 패턴 가져오기
+    url_patterns = get_resolver().url_patterns
+
+    # URL 정보 필터링 (path, name)
+    urls = []
+    for pattern in url_patterns:
+        try:
+            urls.append({
+                "path": pattern.pattern.describe(),
+                "name": pattern.name if pattern.name else "Unnamed",
+            })
+        except AttributeError:
+            pass
+
+    # 템플릿에 URL 목록 전달
+    return render(request, "upbit/service_list.html", {"urls": urls})
 
 
 def account_info_view(request):
