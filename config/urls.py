@@ -24,9 +24,11 @@ def index(request):
 
 
 urlpatterns = [
+    path('', index, name='home'),  # 기본 경로
+
     path('admin/', admin.site.urls),
     path('upbit/', include('upbit.urls')),  # `upbit` 앱의 URL 포함
     path('coinmarketcap/', include('coinmarketcap.urls')),  # `upbit` 앱의 URL 포함
-    path('', index, name='home'),  # 기본 경로
+
 
 ]
