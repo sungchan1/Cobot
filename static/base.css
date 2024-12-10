@@ -1,0 +1,21 @@
+.cobot_footer{
+     text-align:center; margin-top: 2rem;
+}
+.cobot_logo {
+    font-family: 'Lobster', cursive;
+}
+
+.cobot_footer_button{
+     font-size: .9rem
+}
+
+.cobot_header{
+    text-align:center; margin: 2rem 0;
+}
+
+
+@media screen and (max-width:500px) {
+    html {
+        font-size: 13px;
+    }
+}
